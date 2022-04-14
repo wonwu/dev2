@@ -83,29 +83,35 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.AWS_REGION }}
-          cluster-name: test-1
-          
-      - name: update config
-        run: aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name test-1
           
       - name: was-deploy restart
-        run: kubectl rollout restart deployment/was
-          
-      - name: rename file
-        run: mv ./build/libs/*.war ./build/libs/$TIME.war
+        uses: Consensys/kubernetes-action@master
         env:
-          TIME: "${{ steps.current-time.outputs.time }}"
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: rollout restart deployment/was
+          
+#       - name: update config
+#         run: aws eks --region ${{ secrets.AWS_REGION }} update-kubeconfig --name test-1
+          
+#       - name: was-deploy restart
+#         run: kubectl rollout restart deployment/was
+          
+#       - name: rename file
+#         run: mv ./build/libs/*.war ./build/libs/$TIME.war
+#         env:
+#           TIME: "${{ steps.current-time.outputs.time }}"
 
-      - name : eks cloud storage backup
-        run : aws s3 cp --region ${{ secrets.AWS_REGION }} --acl private ./build/libs/*.war s3://${{ secrets.AWS_S3_BUCKET }}
+#       - name : eks cloud storage backup
+#         run : aws s3 cp --region ${{ secrets.AWS_REGION }} --acl private ./build/libs/*.war s3://${{ secrets.AWS_S3_BUCKET }}
 
-#         uses: shallwefootball/s3-upload-action@master
-#         with:
-#           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-#           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-#           aws_bucket: ${{ secrets.AWS_S3_BUCKET }}
-#           source_dir: ./build/libs/
-#           destination_dir: /backup/
+      - uses: shallwefootball/s3-upload-action@master
+        with:
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_bucket: ${{ secrets.AWS_S3_BUCKET }}
+          source_dir: ./build/libs/
+          destination_dir: /backup/
 
 
      
