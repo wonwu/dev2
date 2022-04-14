@@ -89,7 +89,7 @@ jobs:
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         with:
-          args: rollout restart deployment/was
+          args: '"rollout restart deployment/was"'
           
 #       - name: was-deploy restart
 #         run: kubectl rollout restart deployment/was
@@ -99,14 +99,14 @@ jobs:
         env:
           TIME: "${{ steps.current-time.outputs.time }}"
 
-      - name : eks cloud storage backup
-      - uses: shallwefootball/s3-upload-action@master
-        with:
-          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
-          aws_bucket: ${{ secrets.AWS_S3_BUCKET }}
-          source_dir: ./build/libs/*.war
-          destination_dir: /backup
+#       - name : eks cloud storage backup
+#       - uses: shallwefootball/s3-upload-action@master
+#         with:
+#           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+#           aws_bucket: ${{ secrets.AWS_S3_BUCKET }}
+#           source_dir: ./build/libs/*.war
+#           destination_dir: /backup
 
 
      
