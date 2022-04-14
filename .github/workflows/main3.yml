@@ -85,20 +85,19 @@ jobs:
           aws-region: ap-northeast-3
           
       - name: was-deploy restart
-        run: kubectl rollout restart deployment/was
+        uses: Consensys/kubernetes-action@master
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
+        with:
+          args: kubectl rollout restart deployment/was
+          
+#       - name: was-deploy restart
+#         run: kubectl rollout restart deployment/was
           
       - name: rename file
         run: mv ./build/libs/*.war ./build/libs/$TIME.war
         env:
           TIME: "${{ steps.current-time.outputs.time }}"
-       
-#       - name : gcp cloud storage backup
-#         uses: convictional/gcp-storage-action@master
-#         with:
-#           source_file:  ./build/libs/*.war
-#           destination_file: gs://wonz/test/
-#           application_credentials: ${{ secrets.GCP_STG_KEY }}
-#           project_id: coherent-bay-343008
           
 #       - name : eks cloud storage backup
 #       - uses: jakejarvis/s3-sync-action@master
@@ -112,12 +111,14 @@ jobs:
 #           SOURCE_DIR: ./build/libs/*.war     # optional: defaults to entire repository
 #           DEST_DIR: /backup
 
+      - name : eks cloud storage backup
       - uses: shallwefootball/s3-upload-action@master
         with:
           aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
           aws_bucket: ${{ secrets.AWS_S3_BUCKET }}
           source_dir: ./build/libs/*.war
+          destination_dir: /backup
 
 
      
