@@ -100,17 +100,24 @@ jobs:
 #           application_credentials: ${{ secrets.GCP_STG_KEY }}
 #           project_id: coherent-bay-343008
           
-      - name : eks cloud storage backup
-      - uses: jakejarvis/s3-sync-action@master
+#       - name : eks cloud storage backup
+#       - uses: jakejarvis/s3-sync-action@master
+#         with:
+#           args: --acl public-read --follow-symlinks --delete
+#         env:
+#           AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
+#           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+#           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+#           AWS_REGION: 'ap-northeast-3'  
+#           SOURCE_DIR: ./build/libs/*.war     # optional: defaults to entire repository
+#           DEST_DIR: /backup
+
+      - uses: shallwefootball/s3-upload-action@master
         with:
-          args: --acl public-read --follow-symlinks --delete
-        env:
-          AWS_S3_BUCKET: ${{ secrets.AWS_S3_BUCKET }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_REGION: 'ap-northeast-3'  
-          SOURCE_DIR: ./build/libs/*.war     # optional: defaults to entire repository
-          DEST_DIR: /backup
+          aws_key_id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_access_key: ${{ secrets.AWS_SECRET_ACCESS_KEY}}
+          aws_bucket: ${{ secrets.AWS_S3_BUCKET }}
+          source_dir: ./build/libs/*.war
 
 
      
