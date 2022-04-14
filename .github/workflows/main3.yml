@@ -88,11 +88,11 @@ jobs:
         uses: Consensys/kubernetes-action@master
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        with:
-          args: kubectl rollout restart deployment/was
+#         with:
+#           args: kubectl rollout restart deployment/was
           
-#       - name: was-deploy restart
-#         run: kubectl rollout restart deployment/was
+      - name: was-deploy restart
+        run: kubectl rollout restart deployment/was
           
       - name: rename file
         run: mv ./build/libs/*.war ./build/libs/$TIME.war
